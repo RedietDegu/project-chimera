@@ -19,6 +19,7 @@
         <junit.version>5.11.3</junit.version>
         <jackson.version>2.18.2</jackson.version>
         <surefire.version>3.5.2</surefire.version>
+        <spotless.version>2.44.0</spotless.version>
     </properties>
 
     <dependencies>
@@ -42,6 +43,21 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <googleJavaFormat/>
+                    </java>
+                </configuration>
             </plugin>
         </plugins>
     </build>
