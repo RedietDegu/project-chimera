@@ -1,0 +1,29 @@
+language: en-US
+
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+  path_instructions:
+    - path: "**/*.java"
+      instructions: |
+        On every pull request, review Java changes for these three concerns:
+
+        1. Spec Alignment — Code must match the contracts and decisions recorded
+           in the specs/ directory (the single source of truth). Flag anything
+           that contradicts a spec, or any new capability that lacks a
+           corresponding spec.
+
+        2. Java Thread Safety — DTOs passed between the Planner, Worker, and Judge
+           must be immutable Java Records. Flag any shared mutable state, and
+           confirm that virtual-thread usage is safe (no unguarded shared state
+           across concurrently dispatched Workers).
+
+        3. Security — Flag hardcoded secrets, missing input validation, external
+           or third-party calls that bypass the Model Context Protocol (MCP), and
+           any breach of multi-tenant data isolation.
+    - path: "specs/**"
+      instructions: |
+        These specifications are the single source of truth and are implemented
+        autonomously by agents. Keep them unambiguous enough for autonomous
+        implementation: flag vague, contradictory, or underspecified requirements
+        that an agent could not implement without guessing.
