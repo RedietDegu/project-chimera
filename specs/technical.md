@@ -171,3 +171,29 @@ Consistent with the polyglot-persistence decision in the architecture strategy:
 - **High-velocity `CONTENT_ITEM` (video) metadata** is stored in a **NoSQL document store**, where its write-heavy load and platform-varying schema fit best.
 - **`OPERATOR`, `CAMPAIGN`, `AGENT`, `TASK`, and `TRANSACTION`** live in **PostgreSQL** as the relational system of record, where referential integrity and transactional guarantees matter.
 - **`MEMORY_RECORD` embeddings** live in **Weaviate** for semantic agent memory and vector search.
+
+---
+
+## Section 3 — Data Lifecycle: Migration, Transformation & Retrieval
+
+### Migration
+
+- The **PostgreSQL schema is version-controlled** with **forward-only, numbered migration scripts** (Flyway / Liquibase) under `db/migrations/`. Every schema change ships as a **new migration** — never an edit to an already-applied one.
+- **NoSQL `CONTENT_ITEM` documents carry a `schema_version` field.** Readers **upgrade old documents lazily on access**, so platform-schema changes require **no downtime** and no bulk rewrite.
+
+### Transformation
+
+- A **raw Worker artifact** (from `WorkerResult`) is **validated**, then **normalized into a `CONTENT_ITEM`** — mapping `artifact.type` to `content_type` and extracting `media_urls`.
+- **Monetary values are normalized to USDC decimal units** before a `TRANSACTION` row is written.
+- For **agent memory**, a `CONTENT_ITEM` summary is passed through an **embedding model** to produce a vector, stored as a `MEMORY_RECORD` whose `embedding_ref` points at the **Weaviate** object.
+
+### Retrieval (Key Access Patterns)
+
+The main queries agents and the dashboard rely on:
+
+| Consumer | Access pattern | Store |
+| --- | --- | --- |
+| **Planner** | Fetch `pending` `TASK`s for a campaign, ordered by `priority` then `created_at` | PostgreSQL |
+| **Judge** | Fetch `CONTENT_ITEM` rows in `review` status by confidence threshold, for gating | NoSQL |
+| **Agent memory** | Top-k vector similarity search to recall relevant past context | Weaviate |
+| **Operator dashboard** | Paginated read of `CONTENT_ITEM` by `campaign_id` and `status` | NoSQL |
