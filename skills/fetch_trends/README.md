@@ -8,9 +8,10 @@ A Worker calls this skill to **retrieve trending topics for the agent's niche**,
 
 ```json
 {
-  "niche": "string",
-  "time_window_hours": "integer",
-  "source": "string (MCP resource URI)"
+  "version": "1.0",
+  "niche": "string (required)",
+  "time_window_hours": "integer (required)",
+  "source": "string, MCP resource URI (required)"
 }
 ```
 
@@ -18,12 +19,42 @@ A Worker calls this skill to **retrieve trending topics for the agent's niche**,
 
 ```json
 {
+  "version": "1.0",
   "trends": [
     {
-      "topic": "string",
-      "relevance_score": "number 0.0-1.0",
-      "source": "string",
-      "detected_at": "timestamp"
+      "topic": "string (required)",
+      "relevance_score": "number 0.0-1.0 (required)",
+      "source": "string (required)",
+      "detected_at": "timestamp (required)"
+    }
+  ]
+}
+```
+
+## Example
+
+**Input:**
+
+```json
+{
+  "version": "1.0",
+  "niche": "fashion",
+  "time_window_hours": 4,
+  "source": "news://ethiopia/fashion"
+}
+```
+
+**Output:**
+
+```json
+{
+  "version": "1.0",
+  "trends": [
+    {
+      "topic": "habesha kemis modern cuts",
+      "relevance_score": 0.88,
+      "source": "news://ethiopia/fashion",
+      "detected_at": "2026-06-21T09:15:00Z"
     }
   ]
 }

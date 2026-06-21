@@ -15,3 +15,4 @@ Each skill lives in **its own folder** with a `README.md` that defines:
 
 - [`fetch_trends`](fetch_trends/README.md) — retrieve trending topics for the agent's niche via an MCP news resource.
 - [`generate_media`](generate_media/README.md) — generate on-brand image or video content via an MCP generation tool, with character consistency.
+- [`post_content`](post_content/README.md) — publish approved content to a social platform via the twitter MCP server.

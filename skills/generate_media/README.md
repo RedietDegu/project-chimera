@@ -8,10 +8,11 @@ A Worker calls this skill to **generate on-brand image or video content** via an
 
 ```json
 {
-  "prompt": "string",
-  "character_reference_id": "string",
-  "media_type": "image | video",
-  "tier": "daily | hero"
+  "version": "1.0",
+  "prompt": "string (required)",
+  "character_reference_id": "string (required)",
+  "media_type": "image | video (required)",
+  "tier": "daily | hero (required)"
 }
 ```
 
@@ -19,9 +20,35 @@ A Worker calls this skill to **generate on-brand image or video content** via an
 
 ```json
 {
-  "media_url": "string",
-  "generation_id": "string",
-  "cost_usd": "number"
+  "version": "1.0",
+  "media_url": "string (required)",
+  "generation_id": "string (required)",
+  "cost_usd": "number (required)"
+}
+```
+
+## Example
+
+**Input:**
+
+```json
+{
+  "version": "1.0",
+  "prompt": "a daily selfie in a sunlit cafe",
+  "character_reference_id": "char-001",
+  "media_type": "image",
+  "tier": "daily"
+}
+```
+
+**Output:**
+
+```json
+{
+  "version": "1.0",
+  "media_url": "https://cdn.chimera.internal/media/gen-9f2a.png",
+  "generation_id": "gen-9f2a",
+  "cost_usd": 0.04
 }
 ```
 
